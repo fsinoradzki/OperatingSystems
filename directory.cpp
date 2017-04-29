@@ -16,7 +16,6 @@ using namespace std;
 
 bool Directory::file_exists_check(string file_name)
 {
-    vector<string>::iterator it;  // declare an iterator to a vector of strings
   
     
     if (find(directory_vector.begin(), directory_vector.end(), file_name) != directory_vector.end())
@@ -37,8 +36,10 @@ void Directory::add_file_to_dir(string file_name)
 {
     
     if(file_exists_check(file_name)==false)
+    {
         directory_vector.push_back(file_name);
-    
+        cout<<file_name<<" added"<<endl;
+    }
    
     else
         cout<<"Error! A file with this name already exists!"<<endl;
@@ -57,12 +58,12 @@ void Directory::delete_file_from_dir(string file_name)
      if(file_exists_check(file_name)==true)
      {
          directory_vector.erase( find(directory_vector.begin(), directory_vector.end(), file_name));
-         cout<<"erased"<<endl;
+         cout<<file_name<<" erased"<<endl;
      }
     
     else
     {
-        cout<<"This file does not exist"<<endl;
+        cout<<file_name<<" does not exist, can't be erased!"<<endl;
     }
 }
 
@@ -80,19 +81,45 @@ int main()
     
     Directory dir;
   
-    
+   
     dir.add_file_to_dir("file1");
     dir.add_file_to_dir("file2");
     dir.add_file_to_dir("file3");
-   
+    cout<<endl;
+    
+    cout<<"Files in vector as of now:"<<endl;
+    cout<<endl;
     dir.show_all();
     cout<<endl;
 
+    cout<<"Checking if certain files exist"<<endl;
+    
+    if(dir.file_exists_check("file1"))
+    {
+        cout<<"file 1 exists(in the final program this function will just return a bool value for UI processing"<<endl;
+    }
+    else
+    {
+        cout<<"It does not exist"<<endl;
+    }
+    
+    if(dir.file_exists_check("file 55"))
+    {
+        cout<<"file 55 exists(in the final program this function will just return a bool value for UI processing"<<endl;
+    }
+    else
+    {
+        cout<<"File 55 does not exist"<<endl;
+    }
+    
+    cout<<endl;
+    
     dir.delete_file_from_dir("file1");
-    dir.delete_file_from_dir("sqbhsuuq");
+    dir.delete_file_from_dir("file102");
     dir.delete_file_from_dir("file3");
     cout<<endl;
     
+    cout<<"Files in vector as of now:"<<endl;
     dir.show_all();
 
     return 0;
