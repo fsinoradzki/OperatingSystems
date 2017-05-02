@@ -1,5 +1,11 @@
 //Frank Sinoradzki
 
+//TO DO:
+//Implement Edit with List
+//Implement Type with List
+//Implement Delete with List
+//Implement Dir with List stats
+
 #include "UI.h"
 #include "UI.cpp"
 #include "directory.h"
@@ -9,20 +15,54 @@
 #include "file.h"
 #include "file.cpp"
 
-Directory D;
-List L;
+//GLOBAL VARIABLES
+	//allows usage in functions without having to pass each variable
+	
+	Directory D;
+	List L;
+	int myBlockSize = 10;
+	int myDiskSize = 100;
+	DiskProcessType myDisk(myBlockSize,myDiskSize);
+	DiskBlockType *myBuffer = new DiskBlockType(myBlockSize);
+//END GLOBALS
                   
 void Edit(string fname){
-	cout<<"Let's edit yo\n";
+	string line;
+	string data;
+	char* d;
+	while(!cin.eof()){
+		cin >> data;
+		//data += "\n";
+	}
+	//cin.clear();
+	
+	cout << data;
+
+	//while(!cin.eof()){
+		//scanf("%s",d);
+		//
+	//}
+	
+	//for(int i=0;i<sizeof(d);i++)
+		//data[i] = d[i];
+		
+	//cin.clear();
+	//cout << data;
 }    
 
+//Checks to see if the file exists
+//If it does, then the filename gets added to the directory and a new node to the list
 void Create(string fname){
 	if(D.file_exists_check(fname) == true)
 		cout<<fname<<" already exists.\n";
-	else
+	else{
 		D.add_file_to_dir(fname);
+		L.insertNode(fname);
+	}
 }
 
+//Checks to see if the file exists
+//If it does, it gets deleted from the Directory
 void Delete(string fname){
 	if(D.file_exists_check(fname) == true)
 		D.delete_file_from_dir(fname);
@@ -31,9 +71,10 @@ void Delete(string fname){
 }  
                  
 void Type(string fname){
-	cout<<"You're just my type ;)\n";
+	//L.read(fname);
 }  
 
+//Prints out all members of the Directory along with their block sizes
 void Dir(){
 	for(int i = 0; i < D.directorylength(); i++){
 		D.show_specific(i);
@@ -41,6 +82,7 @@ void Dir(){
 	}
 }
 
+//Determines what the instruction is and sends the program to the appropriate function to execute it
 void ExecInstruction(string instr, string fname){
 	if(instr == "edit")
 		Edit(fname);
