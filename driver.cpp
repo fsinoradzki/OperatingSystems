@@ -28,26 +28,15 @@
                   
 void Edit(string fname){
 	string line;
-	string data;
-	char* d;
+	string data="";
 	while(!cin.eof()){
-		cin >> data;
-		//data += "\n";
+		data += cin.get();
+		cout<<"Got char\n";
 	}
-	//cin.clear();
+	cin.clear();
 	
 	cout << data;
-
-	//while(!cin.eof()){
-		//scanf("%s",d);
-		//
-	//}
-	
-	//for(int i=0;i<sizeof(d);i++)
-		//data[i] = d[i];
-		
-	//cin.clear();
-	//cout << data;
+	cout <<"Finished up in Edit\n";
 }    
 
 //Checks to see if the file exists
