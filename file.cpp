@@ -52,23 +52,57 @@ void List::setDiskBlocks(string name, int blockNum, int blockSize){
   }
 }
 
+int List::getStartBlock(string name){
+	Node* curr = head;
+	int start;
+	while(curr != NULL){
+		if(curr->fileName == name){
+			start = curr->startBlockNum;
+			break;
+		}else{
+			curr = curr->next;
+		}
+	}
+	return start;
+}
+int List::getBlocksUsed(string name){
+	Node* curr = head;
+	int used;
+	while(curr != NULL){
+		if(curr->fileName == name){
+			used = curr->blocksUsed;
+			break;
+		}else{
+			curr = curr->next;
+		}
+	}
+	return used;
+}
+
 void List::deleteNode(string name){
   Node* curr = head;
   Node* prev = curr;
+  int c = 0;
   if(curr->next == NULL){
     //only one node in list
     delete curr;
   }else{
     while(curr != NULL){
-      if(curr->fileName == name){
-        prev->next = curr->next;
-        delete curr;
+      if(name == curr->fileName){
+      	if(c == 0){ //if first node in the list is being deleted
+      		head = curr->next;
+      		delete curr;
+      	}else{
+      		prev->next = curr->next;
+        	delete curr;
+      	}
         break;
       }else{
-      prev = curr;
-      curr = curr->next;
+      	prev = curr;
+      	curr = curr->next;
+      	c++;
+      }
     }
-   }
   }
 }
 
@@ -78,7 +112,20 @@ int List::getStats(int fileNumber){
 		curr = curr->next;
 	}
 	cout << setw(8) << curr->fileName << setw(8) << curr->blocksUsed << endl;
+
 	return curr->blocksUsed;
+}
+
+void List::printFileData(string name){
+	Node* curr = head;
+	while(curr != NULL){
+		if(name == curr->fileName){
+			cout << curr->data << endl;
+			break;
+		}else{
+			curr = curr->next;
+		}
+	}
 }
 
 void List::printAll(){
