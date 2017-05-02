@@ -86,7 +86,7 @@ int Directory::directorylength()
 
 void Directory::show_specific(int index)
 {
-    cout<< directory_vector[index]<<"\n";
+    cout<< directory_vector[index];
 }
 
 
