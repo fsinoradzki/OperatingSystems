@@ -80,7 +80,7 @@ void Directory::show_all()
 }
 
 
-int main()
+/*int main()
 {
     
     Directory dir;
@@ -132,3 +132,5 @@ int main()
     
     
 }
+ 
+ */
