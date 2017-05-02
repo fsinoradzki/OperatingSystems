@@ -76,11 +76,22 @@ void Directory::delete_file_from_dir(string file_name)
 void Directory::show_all()
 {
     for(int i=0; i< directory_vector.size(); ++i)
-        cout << directory_vector[i] <<" " <<endl;
+        cout << directory_vector[i] <<" "<<endl;
+}
+
+int Directory::directorylength()
+{
+    return directory_vector.size();
+}
+
+void Directory::show_specific(int index)
+{
+    cout<< directory_vector[index]<<"\n";
 }
 
 
-/*int main()
+/*
+int main()
 {
     
     Directory dir;
@@ -132,5 +143,5 @@ void Directory::show_all()
     
     
 }
- 
  */
+

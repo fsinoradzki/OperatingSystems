@@ -21,6 +21,9 @@ class Directory{
         void add_file_to_dir(string file_name);
         void delete_file_from_dir (string file_name);
         void show_all();
+        void show_specific(int index);
+        int directorylength();
+        Directory();
     
     
     private:
