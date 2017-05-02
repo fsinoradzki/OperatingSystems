@@ -9,9 +9,13 @@
 #include "directory.h"
 #include <iostream>
 #include <algorithm>
+
 using namespace std;
 
-
+Directory::Directory()
+{
+    cout << "Directory created." << endl;
+}
 
 
 bool Directory::file_exists_check(string file_name)
