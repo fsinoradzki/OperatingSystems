@@ -7,6 +7,8 @@ public:
 	string data;
 	Node *next;
 	int startBlockNum;
+	int endBlockNum;
+	int blocksUsed;
 	Node(){}
 	Node(string name){
 		fileName = name;
@@ -21,9 +23,11 @@ private:
 public:
 	void insertNode(string name);
 	void deleteNode(string name);
-	void printAll();
+	void printAll(); 
 	void setData(string name,string info);
-	void setStartBlock(string name, int blockNum);
+	void setDiskBlocks(string name, int blockNum, int blockSize);
+	int getStats(int num); //run in a for loop from UI outputting each node name and blocks used
+	//add getNode() method to traverse list and return the node object where names match
 };
 
 #endif
