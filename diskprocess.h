@@ -47,7 +47,6 @@ class DiskProcessType {
  private:
   int blockSize;      // the size of a single block on disk
   int numBlocks;      // the number of this on the disk
-  int numCreated;     // how blocks were actually used so far
   int numReads;       // how many read operations performaed
   int numWrites;      // how many write oeprations peformed
   int currentBlock;   // the block use din last write/write
@@ -58,6 +57,7 @@ class DiskProcessType {
   bool createBlock(int blockNumber); // ceate a bock where none was before
   
  public:
+  int numCreated;     // how blocks were actually used so far
 
   DiskProcessType(int bsize, int bnum) {// mke the disk
     blockSize=bsize;

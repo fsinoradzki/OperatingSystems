@@ -1,9 +1,9 @@
 //Frank Sinoradzki
 
-
-
 #include <iostream>
 using namespace std;
+
+#include "UI.h"
 
 //Constructor. Sets instruction and filename to blank strings
 UI::UI(){

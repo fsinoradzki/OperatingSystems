@@ -7,7 +7,7 @@ public:
 	string data;
 	Node *next;
 	int startBlockNum;
-	int endBlockNum;
+	// int endBlockNum;
 	int blocksUsed;
 	Node(){}
 	Node(string name){

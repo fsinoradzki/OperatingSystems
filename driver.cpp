@@ -6,14 +6,28 @@
 //Implement Delete with List
 //Implement Dir with List stats
 
+#include <iostream>
+#include <math.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
 #include "UI.h"
-#include "UI.cpp"
+// #include "UI.cpp"
 #include "directory.h"
-#include "directory.cpp"
+// #include "directory.cpp"
 #include "diskprocess.h"
-#include "diskprocess.cpp"
+// #include "diskprocess.cpp"
 #include "file.h"
-#include "file.cpp"
+// #include "file.cpp"
 
 //GLOBAL VARIABLES
 	//allows usage in functions without having to pass each variable
@@ -21,22 +35,58 @@
 	Directory D;
 	List L;
 	int myBlockSize = 10;
-	int myDiskSize = 100;
+	int myDiskSize = 10;
 	DiskProcessType myDisk(myBlockSize,myDiskSize);
 	DiskBlockType *myBuffer = new DiskBlockType(myBlockSize);
 //END GLOBALS
+
+void Edit(string fname);
+void Create(string fname);
+void Delete(string fname);
+void Type(string fname);
+void Dir();
+void ExecInstruction(string instr, string fname);
+void writeToDisk(string fname,string dataFromUI);
+void deleteFromList(string fname);
+void deleteFromDisk(int startBlock, int blocksUsed);
+int Reposition(int start, int blocks);
                   
+
+int main(){
+        //Call File System to initialize a blank list with just head
+        //Call Directory to initialize a blank Vector
+        //Call Disk Process to initialize a new disk
+        //Call UI to initialize the UI
+        //Start the UI
+
+		bool keepGoing = true;
+		UI gui;
+		
+		while(keepGoing){
+			gui.Start();
+			if(gui.getInstruction() == "exit")
+				keepGoing = false;
+			else
+				ExecInstruction(gui.getInstruction(), gui.getFilename());
+		}
+}
+
+
 void Edit(string fname){
-	string line;
-	string data="";
-	while(!cin.eof()){
-		data += cin.get();
-		cout<<"Got char\n";
+	if(!D.file_exists_check(fname) == true)
+		cout << "File named '" <<fname<<"' does not exist.\n";
+	else{
+		string line;
+		string data="";
+		while(!cin.eof()){
+			line = cin.get();
+			if(!cin.eof())
+			data += line;	
+		}
+		cin.clear();
+		cout << endl;
+		writeToDisk(fname,data);
 	}
-	cin.clear();
-	
-	cout << data;
-	cout <<"Finished up in Edit\n";
 }    
 
 //Checks to see if the file exists
@@ -53,22 +103,31 @@ void Create(string fname){
 //Checks to see if the file exists
 //If it does, it gets deleted from the Directory
 void Delete(string fname){
-	if(D.file_exists_check(fname) == true)
+	if(D.file_exists_check(fname) == true){
 		D.delete_file_from_dir(fname);
+		deleteFromList(fname);
+	}
 	else
 		cout<<fname<<" doesn't exist.\n";
 }  
                  
 void Type(string fname){
-	//L.read(fname);
+	L.printFileData(fname);
 }  
 
 //Prints out all members of the Directory along with their block sizes
 void Dir(){
+	cout << "\tATOS-FS Directory Listing" << endl;
+	cout << "\tFILENAME\t\tSIZE (blks)" << endl;
+	int totalBlocks = 0;
 	for(int i = 0; i < D.directorylength(); i++){
-		D.show_specific(i);
-		cout<<" x blocks"<<endl;
+		int block;
+		block = L.getBlocksUsed(D.show_specific(i));
+		totalBlocks += block;
+		cout << "\t" << D.show_specific(i) << "\t\t\t" << block << " blocks"<<endl;
 	}
+	cout << "\tFREE SPACE " << (myDiskSize - totalBlocks) << " blks" << endl;
+	// L.printAll();
 }
 
 //Determines what the instruction is and sends the program to the appropriate function to execute it
@@ -82,25 +141,60 @@ void ExecInstruction(string instr, string fname){
 	else if(instr == "type")   
 		Type(fname);
 	else if(instr =="dir")    
-		Dir(); //Can possibly fudge up if there's no filename
+		Dir(); 
 }
 
-int main(){
-        //Call File System to initialize a blank list with just head
-        //Call Directory to initialize a blank Vector
-        //Call Disk Process to initialize a new disk
-        //Call UI to initialize the UI
-        //Start the UI
-		
 
-		bool keepGoing = true;
-		UI gui;
-		
-		while(keepGoing){
-			gui.Start();
-			if(gui.getInstruction() == "exit")
-				keepGoing = false;
-			else
-				ExecInstruction(gui.getInstruction(), gui.getFilename());
+void writeToDisk(string fname,string dataFromUI){
+	double length = dataFromUI.length();
+	int count = 0; 	//count needs to reset each time a new data string is passed
+	int blocksNeeded = ceil(length / myBlockSize);
+	int startBlock = myDisk.getNumCreated();
+
+	if(blocksNeeded < (myDiskSize - startBlock)){
+		L.setData(fname,dataFromUI);
+		L.setDiskBlocks(fname,startBlock,myBlockSize);
+
+		for(int i = startBlock; i < startBlock + blocksNeeded; i++){
+			for(int j = 0; j < myBlockSize; j++){
+				myBuffer->data[j] = dataFromUI[count];
+				count++;
+			}
+			myDisk.write(i,myBuffer);
 		}
+
+	}else{
+		cerr << "Not enough blocks left" <<endl;
+	}
+
+}
+
+int Reposition(int start, int blocks){
+	int count = 0;
+	myDisk.read(start+blocks, myBuffer);
+	while(myDisk.write(start+count, myBuffer) !=0){
+		count++;
+		myDisk.read(start+blocks+count, myBuffer);
+	}
+
+	return start+count;
+}
+
+void deleteFromList(string fname){
+	int start = L.getStartBlock(fname);
+	int blocks = L.getBlocksUsed(fname);
+	L.deleteNode(fname);
+	int newStart = Reposition(start, blocks);
+	deleteFromDisk(newStart,blocks);
+}
+
+void deleteFromDisk(int startBlock, int blocksUsed){
+	for(int i = startBlock; i < startBlock+blocksUsed; i++){
+		for(int j = 0; j<myBlockSize;j++){
+			myBuffer->data[j] = '\0';
+		}
+		myDisk.numCreated--;
+		myDisk.write(i,myBuffer);
+	}
+
 }

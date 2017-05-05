@@ -84,9 +84,9 @@ int Directory::directorylength()
     return directory_vector.size();
 }
 
-void Directory::show_specific(int index)
+string Directory::show_specific(int index)
 {
-    cout<< directory_vector[index];
+    return directory_vector[index];
 }
 
 
