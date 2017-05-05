@@ -1,3 +1,5 @@
+//Main Author: Kevin Duncan
+
 #include <iostream>
 #include <unistd.h>
 #include <signal.h>

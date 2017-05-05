@@ -1,4 +1,5 @@
-//Frank Sinoradzki
+//UI class implementation
+//Main author: Frank Sinoradzki
 
 #include <iostream>
 using namespace std;
@@ -21,6 +22,7 @@ string UI::getFilename(){
 	return filename;
 }
 
+//Gets user input and stores it in the filename and instruction data objects
 void UI::Start(){
 	bool exit = false;
 	string str = "";

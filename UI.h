@@ -1,5 +1,5 @@
 //UI Class
-
+//Main author: Frank Sinoradzki
 
 #include <string>
 using namespace std;

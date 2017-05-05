@@ -42,7 +42,7 @@ void Directory::add_file_to_dir(string file_name) //adds a file to the directory
     if(file_exists_check(file_name)==false) //first checks if file already exists
     {
         directory_vector.push_back(file_name);
-        cout<<file_name<<" added"<<endl;
+        //cout<<file_name<<" added"<<endl;
     }
    
     else
@@ -59,12 +59,12 @@ void Directory::delete_file_from_dir(string file_name) //deletes a file if the f
      if(file_exists_check(file_name)==true)//checks if a file exists first
      {
          directory_vector.erase( find(directory_vector.begin(), directory_vector.end(), file_name));
-         cout<<file_name<<" erased"<<endl;
+         //cout<<file_name<<" erased"<<endl;
      }
     
     else
     {
-        cout<<file_name<<" does not exist, can't be erased!"<<endl;
+        //cout<<file_name<<" does not exist, can't be erased!"<<endl;
     }
 }
 

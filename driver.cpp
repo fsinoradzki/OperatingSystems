@@ -1,10 +1,5 @@
-//Frank Sinoradzki
-
-//TO DO:
-//Implement Edit with List
-//Implement Type with List
-//Implement Delete with List
-//Implement Dir with List stats
+//Driver program
+//Main authors: Frank Sinoradzki and Kevin Duncan
 
 #include <iostream>
 #include <math.h>
@@ -21,13 +16,9 @@
 using namespace std;
 
 #include "UI.h"
-// #include "UI.cpp"
 #include "directory.h"
-// #include "directory.cpp"
 #include "diskprocess.h"
-// #include "diskprocess.cpp"
 #include "file.h"
-// #include "file.cpp"
 
 //GLOBAL VARIABLES
 	//allows usage in functions without having to pass each variable
@@ -53,25 +44,22 @@ int Reposition(int start, int blocks);
                   
 
 int main(){
-        //Call File System to initialize a blank list with just head
-        //Call Directory to initialize a blank Vector
-        //Call Disk Process to initialize a new disk
-        //Call UI to initialize the UI
-        //Start the UI
-
-		bool keepGoing = true;
-		UI gui;
-		
-		while(keepGoing){
-			gui.Start();
-			if(gui.getInstruction() == "exit")
-				keepGoing = false;
-			else
-				ExecInstruction(gui.getInstruction(), gui.getFilename());
-		}
+	bool keepGoing = true;
+	UI gui;
+	
+	//Initializes the UI and loops through it
+	//Will get the instruction and filename from the UI class
+	//Then sends that instruction to be executed	
+	while(keepGoing){
+		gui.Start();
+		if(gui.getInstruction() == "exit")
+			keepGoing = false;
+		else
+			ExecInstruction(gui.getInstruction(), gui.getFilename());
+	}
 }
 
-
+//Edits the data in the linked list and disk
 void Edit(string fname){
 	if(!D.file_exists_check(fname) == true)
 		cout << "File named '" <<fname<<"' does not exist.\n";
@@ -110,7 +98,8 @@ void Delete(string fname){
 	else
 		cout<<fname<<" doesn't exist.\n";
 }  
-                 
+           
+//Prints out the data inside the specified filename      
 void Type(string fname){
 	L.printFileData(fname);
 }  
@@ -144,17 +133,21 @@ void ExecInstruction(string instr, string fname){
 		Dir(); 
 }
 
-
+//Writes the contents of a string to the disk
 void writeToDisk(string fname,string dataFromUI){
 	double length = dataFromUI.length();
 	int count = 0; 	//count needs to reset each time a new data string is passed
 	int blocksNeeded = ceil(length / myBlockSize);
 	int startBlock = myDisk.getNumCreated();
 
+	//Checks to see if there is space
+	//If there is, the node in the linked list gets the data
+	//And the disk block gets as much data as it can hold
 	if(blocksNeeded < (myDiskSize - startBlock)){
 		L.setData(fname,dataFromUI);
 		L.setDiskBlocks(fname,startBlock,myBlockSize);
 
+		//Goes through the disk to put the data at the block
 		for(int i = startBlock; i < startBlock + blocksNeeded; i++){
 			for(int j = 0; j < myBlockSize; j++){
 				myBuffer->data[j] = dataFromUI[count];
@@ -169,8 +162,16 @@ void writeToDisk(string fname,string dataFromUI){
 
 }
 
+//Repositions the data in the blocks after a deletion
+//It does this by replacing the first block that is to be deleted with
+//	the block directly after the last one to be deleted
+//This avoids fragmentation issues!
+//Returns the position of the last few blocks that have to be deleted
 int Reposition(int start, int blocks){
 	int count = 0;
+	
+	//Load the buffer with the next block after the one to be deleted
+	//If it isn’t NULL then replace the original block with the new data
 	myDisk.read(start+blocks, myBuffer);
 	while(myDisk.write(start+count, myBuffer) !=0){
 		count++;
@@ -180,6 +181,9 @@ int Reposition(int start, int blocks){
 	return start+count;
 }
 
+//Calls the List’s delete function
+//Calls the Reposition function
+//Calls the delete from disk with the position returned from Reposition
 void deleteFromList(string fname){
 	int start = L.getStartBlock(fname);
 	int blocks = L.getBlocksUsed(fname);
@@ -188,6 +192,8 @@ void deleteFromList(string fname){
 	deleteFromDisk(newStart,blocks);
 }
 
+//Creates an empty buffer
+//Replaces the given block with the NULL buffer
 void deleteFromDisk(int startBlock, int blocksUsed){
 	for(int i = startBlock; i < startBlock+blocksUsed; i++){
 		for(int j = 0; j<myBlockSize;j++){
