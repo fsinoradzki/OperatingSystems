@@ -1,4 +1,3 @@
-//
 #include <iostream>
 #include <unistd.h>
 #include <signal.h>
@@ -13,13 +12,14 @@ using namespace std;
 
 #include "file.h"
 
+//Inserts a node to the back of the linked list and initialiazes some data in the node
 void List::insertNode(string name){
 	Node* newNode = new Node(name);
 	if(head && tail){
     	tail->next = newNode;
    	 	tail = newNode;
-      newNode->startBlockNum = 0;
-      newNode->blocksUsed = 0;
+      	newNode->startBlockNum = 0;
+      	newNode->blocksUsed = 0;
     	newNode->next = NULL;
   	}else{
       newNode->startBlockNum = 0;
@@ -31,6 +31,7 @@ void List::insertNode(string name){
 
 }
 
+//Will find the node with the passed file name and use the passed data to set the data info of the node in the list
 void List::setData(string name, string info){
   Node* curr = head;
   while(curr != NULL){
@@ -43,6 +44,7 @@ void List::setData(string name, string info){
   }
 }
 
+//Finds the node with the passed file name and sets the starting disk block and blocks used as passed from the disk
 void List::setDiskBlocks(string name, int blockNum, int blockSize){
   Node* curr = head;
   while(curr != NULL){
@@ -57,6 +59,7 @@ void List::setDiskBlocks(string name, int blockNum, int blockSize){
   }
 }
 
+//Returns the starting block number for the node with the given file name
 int List::getStartBlock(string name){
 	Node* curr = head;
 	int start;
@@ -70,6 +73,8 @@ int List::getStartBlock(string name){
 	}
 	return start;
 }
+
+//Returns the number of blocks used for the ndoe with the given file name
 int List::getBlocksUsed(string name){
 	Node* curr = head;
 	int used;
@@ -84,6 +89,11 @@ int List::getBlocksUsed(string name){
 	return used;
 }
 
+/*
+* First this method will delete the node with the passed file name and reassign pointers
+* Then this method uses the block data from the deleted node to update the position of each file
+* on the disk by pushing each node up on the disk based on the number of blocks the deleted node had occupied
+*/
 void List::deleteNode(string name){
   Node* curr = head;
   Node* prev = curr;
@@ -127,6 +137,7 @@ void List::deleteNode(string name){
 
 }
 
+//not currently in use in main but was a helpful way to output some stats of a node while testing
 int List::getStats(int fileNumber){
 	Node* curr = head;
 	for(int i = 0; i < fileNumber; i++){
@@ -137,6 +148,7 @@ int List::getStats(int fileNumber){
 	return curr->blocksUsed;
 }
 
+//Finds the node with the given file name and outputs the data variable to the terminal
 void List::printFileData(string name){
 	Node* curr = head;
 	while(curr != NULL){
@@ -149,13 +161,13 @@ void List::printFileData(string name){
 	}
 }
 
+//not in use in main but used to see all of the variables in a node object
 void List::printAll(){
 	Node* curr = head;
 	while(curr != NULL){
 		cout << "File Name: " << curr->fileName << endl;
    	 	cout << "File Data: " << curr->data << endl;
     	cout << "Disk Start Block: " << curr->startBlockNum << endl;
-    	// cout << "Disk End Block: " << curr->endBlockNum << endl;
     	cout << "Disk Blocks Used: " << curr->blocksUsed << endl << endl; 
 		curr = curr->next;
 	}
