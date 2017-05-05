@@ -3,7 +3,7 @@
 //  CISC3595_5_atos-fs
 //
 //  Created by Angjelo Marku on 4/28/17.
-//  Copyright © 2017 Angjelo Marku. All rights reserved.
+//  
 //
 
 #include "directory.h"
@@ -12,13 +12,13 @@
 
 using namespace std;
 
-Directory::Directory()
+Directory::Directory() //constructor
 {
-    cout << "Directory created." << endl;
+ 
 }
 
 
-bool Directory::file_exists_check(string file_name)
+bool Directory::file_exists_check(string file_name) //checks if file exists in directory list, returns bool value
 {
   
     
@@ -36,10 +36,10 @@ bool Directory::file_exists_check(string file_name)
 
 
 
-void Directory::add_file_to_dir(string file_name)
+void Directory::add_file_to_dir(string file_name) //adds a file to the directory
 {
     
-    if(file_exists_check(file_name)==false)
+    if(file_exists_check(file_name)==false) //first checks if file already exists
     {
         directory_vector.push_back(file_name);
         cout<<file_name<<" added"<<endl;
@@ -53,13 +53,10 @@ void Directory::add_file_to_dir(string file_name)
 
 
 
-void Directory::delete_file_from_dir(string file_name)
+void Directory::delete_file_from_dir(string file_name) //deletes a file if the file exists
 {
-   /* directory_vector.erase(remove(directory_vector.begin(), directory_vector.end(), file_name), directory_vector.end());
-    cout<<"erased"<<endl;
-    */
     
-     if(file_exists_check(file_name)==true)
+     if(file_exists_check(file_name)==true)//checks if a file exists first
      {
          directory_vector.erase( find(directory_vector.begin(), directory_vector.end(), file_name));
          cout<<file_name<<" erased"<<endl;
@@ -73,75 +70,21 @@ void Directory::delete_file_from_dir(string file_name)
 
 
 
-void Directory::show_all()
+void Directory::show_all() //just shows all the contents of the directory
 {
     for(int i=0; i< directory_vector.size(); ++i)
         cout << directory_vector[i] <<" "<<endl;
 }
 
-int Directory::directorylength()
+int Directory::directorylength() //returns directory length
 {
     return directory_vector.size();
 }
 
-string Directory::show_specific(int index)
+string Directory::show_specific(int index) //returns the content of the directory at a specific index
 {
     return directory_vector[index];
 }
 
 
-/*
-int main()
-{
-    
-    Directory dir;
-  
-   
-    dir.add_file_to_dir("file1");
-    dir.add_file_to_dir("file2");
-    dir.add_file_to_dir("file3");
-    cout<<endl;
-    
-    cout<<"Files in vector as of now:"<<endl;
-    cout<<endl;
-    dir.show_all();
-    cout<<endl;
-
-    cout<<"Checking if certain files exist"<<endl;
-    
-    if(dir.file_exists_check("file1"))
-    {
-        cout<<"file 1 exists(in the final program this function will just return a bool value for UI processing"<<endl;
-    }
-    else
-    {
-        cout<<"It does not exist"<<endl;
-    }
-    
-    if(dir.file_exists_check("file 55"))
-    {
-        cout<<"file 55 exists(in the final program this function will just return a bool value for UI processing"<<endl;
-    }
-    else
-    {
-        cout<<"File 55 does not exist"<<endl;
-    }
-    
-    cout<<endl;
-    
-    dir.delete_file_from_dir("file1");
-    dir.delete_file_from_dir("file102");
-    dir.delete_file_from_dir("file3");
-    cout<<endl;
-    
-    cout<<"Files in vector as of now:"<<endl;
-    dir.show_all();
-
-    return 0;
-    
-    
-    
-    
-}
- */
 
