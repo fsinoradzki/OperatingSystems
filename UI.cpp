@@ -30,7 +30,7 @@ void UI::Start(){
 	
 	//If the input is null, nothing will execute
 	//If there is input, split up the instruction and argument
-	cout << "$";
+	cout << "$ ";
 	getline(cin, str);
 	
 	//Everything before the space (text) is the instruction
